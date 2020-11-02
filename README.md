@@ -1,2 +1,2 @@
 # Spiny
-Publishes Modules to PowerShell Gallery And OPtionally Updates Module Numbers
+Publishes Modules to PowerShell Gallery And Optionally Updates Module Numbers
