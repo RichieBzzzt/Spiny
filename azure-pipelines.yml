@@ -99,7 +99,7 @@ steps:
     inputs:
       targetType: "inline"
       script: |
-        Install-Module Spiny -Scope CurrentUser -SkipPublisherCheck -Force
-        Import-Module Spiny 
+        Install-Module Spiny -Scope CurrentUser -SkipPublisherCheck -Force -Verbose
+        Import-Module Spiny -Force -Verbose
         $moduleNumber = Edit-SPModuleVersionNumber -ModuleVersionNumber $env:VERSIONNUMBER -psd1File $psdFile
       pwsh: true
