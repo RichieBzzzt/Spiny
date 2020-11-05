@@ -1,0 +1,87 @@
+# Starter pipeline
+# Start with a minimal pipeline that you can customize to build and deploy your code.
+# Add steps that build, run tests, deploy, and more:
+# https://aka.ms/yaml
+
+trigger:
+  - main
+pr:
+  autoCancel: true
+  branches:
+    include:
+      - main
+
+variables:
+- name: baseVersionNumber
+  value: '0.885'
+- name: Minor 
+  value: $[counter(variables['BaseVersionNumber'], 8)]
+- name: VersionNumber 
+  value: $(BaseVersionNumber).$(Minor)
+
+pool:
+  vmImage: 'windows-2019'
+
+name: Spiny_$(BuildID)
+
+steps:
+  - task: PowerShell@2
+    displayName: "Powershell Pester Tests on Ubuntu Latest"
+    inputs:
+      targetType: "inline"
+      script: |
+        Install-Module Pester -MinimumVersion 4.4.2 -MaximumVersion 4.10.1 -Scope CurrentUser -SkipPublisherCheck -Force
+        Import-Module Pester -MinimumVersion 4.4.2 -MaximumVersion 4.10.1 
+        Set-Location "./Tests"
+        $Edition = $PSVersionTable.PSEdition
+        Invoke-Pester -CodeCoverage ../P*/*.ps1 -Script @{Path = "./*.tests.ps1"} -OutputFile "Test-$Edition-Results.xml" -OutputFormat NUnitXML -CodeCoverageOutputFile "coverage-$Edition-results.xml"
+      pwsh: true
+
+  - task: PublishTestResults@2
+    displayName: "Publish Test Results **/Test*Results.xml"
+    inputs:
+      testResultsFormat: NUnit
+      testResultsFiles: "**/Test-*Results.xml"
+      testRunTitle: ubuntu-latest
+      publishRunAttachments: false
+      failTaskOnFailedTests: true
+
+  - task: PublishCodeCoverageResults@1
+    displayName: 'Publish Tests Coverage'
+    inputs:
+      codeCoverageTool: 'JaCoCo'
+      summaryFileLocation: '**/coverage-*-results.xml'
+      pathToSources: '$(System.DefaultWorkingDirectory)'
+      failIfCoverageEmpty: true
+
+  - task: CopyFiles@2
+    displayName: "Copy Files to: $(build.artifactstagingdirectory)"
+    inputs:
+      Contents: |
+        Private\**
+        Public\**
+        Scripts\**
+        *.psd1
+        *.psm1
+      TargetFolder: "$(build.artifactstagingdirectory)"
+
+  - task: PublishBuildArtifacts@1
+    displayName: "Publish Artifact: Spiny"
+    inputs:
+      ArtifactName: Spiny
+
+  - task: DownloadPipelineArtifact@2
+    inputs:
+      artifact: Spiny
+      path: $(Build.ArtifactStagingDirectory)\Spiny
+
+  - task: richiebzzzt.PublishPackageToPowerShellGallery.Publish-Package-To-PowerShell-Gallery.PublishPackageToPowerShellGallery@0
+    condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/main'))
+    displayName: 'Azure DevOps PowerShell Gallery Packager '
+    inputs:
+      apiKey: '$(apikey)'
+      path: $(Build.ArtifactStagingDirectory)\Spiny
+      setVersionNumberInManifest: true
+      psd1FileName: $(Build.ArtifactStagingDirectory)\Spiny\Spiny.psd1
+      version: $(VersionNumber)
+
