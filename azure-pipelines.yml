@@ -103,7 +103,7 @@ steps:
         Import-Module Spiny -Force -Verbose
         $moduleNumber = Edit-SPModuleVersionNumber -ModuleVersionNumber $env:VERSIONNUMBER -psd1File $(Build.ArtifactStagingDirectory)\Spiny\Spiny.psd1
         Publish-SPPackageToPowerShellGallery `
-        apiKey: '$(apikey)' `
-        path: $(Build.ArtifactStagingDirectory)\Spiny
+        -apiKey '$(apikey)' `
+        -path $(Build.ArtifactStagingDirectory)\Spiny
 
       pwsh: true
