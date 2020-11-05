@@ -10,6 +10,7 @@ Function Publish-SPPackageToPowerShellGallery {
         [switch] $whatif
     )
     $path = [IO.Path]::GetFullPath($path)
+    [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
 
     if ($PSBoundParameters.ContainsKey('PublishModuleParams') -eq $false) {
         $PublishModuleParams = @{
