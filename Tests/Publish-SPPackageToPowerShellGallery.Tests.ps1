@@ -16,14 +16,7 @@ Describe "Update Module Version Number" {
         }
         { Publish-SPPackageToPowerShellGallery -apiKey "fakekey" -Path $seaSalt -PublishModuleParams $PublishModuleParams -whatif } | Should -Not -Throw
     }
-    it "Can Publish" {
-        $script:MockPublishModuleCalled = 0
-        $MockPublishModule = {
-            $script:MockPublishModuleCalled++                                
-            return $true
-        }
-        Mock -CommandName Publish-Module -MockWith $MockPublishModule
-        Publish-SPPackageToPowerShellGallery -apiKey "fakekey" -Path $seaSalt
-        Assert-MockCalled Publish-Module -Times $MockPublishModuleCalled
+    it "Throw on Dodgy Key" {
+        {Publish-SPPackageToPowerShellGallery -apiKey "fakekey" -Path $seaSalt } | Should -Throw
     }
 }
