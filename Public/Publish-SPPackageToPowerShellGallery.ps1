@@ -20,15 +20,13 @@ Function Publish-SPPackageToPowerShellGallery {
         $PublishModuleParams.Add('NuGetApiKey', $path)
         $PublishModuleParams.Add('Force', $true)
     }
-    Install-Module -Name PowerShellGet -Scope CurrentUser -Force -AllowClobber
-
+    Install-Module -Name PackageManagement -Scope CurrentUser -Force -AllowClobber | Out-Null
     if ($PSBoundParameters.ContainsKey('whatif') -eq $false) {
         Write-Host "Publishing module"
         Publish-Module @PublishModuleParams
     }
     else {
         $PublishModuleParams.Add('WhatIf', $true)
-        Write-Host "what if specified"
         Publish-Module @PublishModuleParams
     }
 }
