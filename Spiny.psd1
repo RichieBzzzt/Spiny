@@ -58,7 +58,7 @@
     # NestedModules = @()
 
     # Functions to export from this module
-    FunctionsToExport = 'Edit-SPModuleVersionNumber.ps1','Publish-SPPackageToPowerShellGallery.ps1'
+    FunctionsToExport = 'Edit-SPModuleVersionNumber','Publish-SPPackageToPowerShellGallery'
 
     # Cmdlets to export from this module
     # CmdletsToExport   = '*'
