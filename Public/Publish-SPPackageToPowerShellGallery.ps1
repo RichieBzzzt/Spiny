@@ -18,7 +18,6 @@ Function Publish-SPPackageToPowerShellGallery {
     else {
         $PublishModuleParams.Add('Path', $path)
         $PublishModuleParams.Add('NuGetApiKey', $path)
-        $PublishModuleParams.Add('Force', $true)
     }
     if ((Get-Module -ListAvailable -Name PackageManagement) -eq $false) {
         Install-Module -Name PackageManagement -Scope CurrentUser -Force -AllowClobber

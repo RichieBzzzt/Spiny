@@ -26,7 +26,7 @@ Describe "Update Module Version Number" {
         $moduleNumber | Should -BeExactly "ModuleVersion = '0.0.7.1'"
     }
 
-    it "Should Throw, Version Number Remains Unchanged" {
+    it "Should Throw With Dodgy Version Number, Version Number Remains Unchanged" {
         $psdFile = Resolve-Path "./file/SeaSalt.psd1"
         [string]$updatedModuleVersion = Get-Content $psdFile | Where-Object { $_ -match "ModuleVersion" } | Select-Object -First 1
         $updatedModuleVersion = $updatedModuleVersion.Trim()
@@ -35,5 +35,26 @@ Describe "Update Module Version Number" {
         $updatedModuleVersion = Get-Content $psdFile | Where-Object { $_ -match "ModuleVersion" } | Select-Object -First 1
         $updatedModuleVersion = $updatedModuleVersion.Trim()
         $updatedModuleVersion | Should -BeExactly "ModuleVersion = '0.0.7.1'"
+    }
+
+    it "Should Throw With Non-Existent PSD1" {
+        $psdFile = "./file/NoFileSeaSalt.psd1"
+        { Edit-SPModuleVersionNumber -ModuleVersionNumber "0.0.6" -psd1File $psdFile  } | Should -Throw
+    }
+
+    it "Should Throw With Mis-spelt ModuelNumber" {
+        $psdFile = Resolve-Path "./file/ModuelVersion.psd1"
+        { Edit-SPModuleVersionNumber -ModuleVersionNumber "0.0.6" -psd1File $psdFile  } | Should -Throw
+    }
+
+    it "Should Throw With Mis-spelt ModuelNumber" {
+        $psdFile = Resolve-Path "./file/NoModule.psd1"
+        { Edit-SPModuleVersionNumber -ModuleVersionNumber "0.0.6" -psd1File $psdFile  } | Should -Throw
+    }
+
+
+    it "Should Throw With Not PSD1" {
+        $psdFile = Resolve-Path "./file/NoModule.psd1"
+        { Edit-SPModuleVersionNumber -ModuleVersionNumber "0.0.6" -psd1File $psdFile  } | Should -Throw
     }
 }
