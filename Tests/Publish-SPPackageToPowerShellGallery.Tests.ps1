@@ -23,7 +23,7 @@ Describe "Update Module Version Number" {
             return $true
         }
         Mock -CommandName Publish-Module -MockWith $MockPublishModule
-        { Publish-SPPackageToPowerShellGallery -apiKey "fakekey" -Path $seaSalt } | Should not Throw
+        { Publish-SPPackageToPowerShellGallery -apiKey "fakekey" -Path $seaSalt } | Should -Not -Throw
         Assert-MockCalled Publish-Module -Times $MockPublishModuleCalled
     }
 }
