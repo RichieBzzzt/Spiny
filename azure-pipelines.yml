@@ -82,7 +82,7 @@ steps:
   - task: DownloadBuildArtifacts@0
     inputs:
       buildType: 'current'
-      downloadPath: $(Build.ArtifactStagingDirectory)\Spiny
+      downloadPath: $(Build.ArtifactStagingDirectory)/Spiny
       artifactName: Spiny
 
   - task: PowerShell@2
@@ -96,5 +96,5 @@ steps:
         $moduleNumber = Edit-SPModuleVersionNumber -ModuleVersionNumber $env:VERSIONNUMBER -psd1File $(Build.ArtifactStagingDirectory)/Spiny/Spiny/Spiny.psd1
         Publish-SPPackageToPowerShellGallery `
         -apiKey '$(apikey)' `
-        -path $(Build.ArtifactStagingDirectory)\Spiny\Spiny
+        -path $(Build.ArtifactStagingDirectory)/Spiny/Spiny
       pwsh: true
