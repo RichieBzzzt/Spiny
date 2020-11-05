@@ -24,7 +24,7 @@ Function Publish-SPPackageToPowerShellGallery {
     }
     if ($PSBoundParameters.ContainsKey('PublishModuleParams') -eq $false) {
         Write-Host " No value specified for NuGet Path. Am downloading."
-        Install-Nuget
+        Install-SPNuget
     }
     Write-Host "Create NuGet package provider"
     Install-PackageProvider -Name NuGet -Scope CurrentUser -Force -ForceBootstrap
