@@ -84,18 +84,8 @@ steps:
       artifact: Spiny
       path: $(Build.ArtifactStagingDirectory)\Spiny
 
-  - task: richiebzzzt.PublishPackageToPowerShellGallery.Publish-Package-To-PowerShell-Gallery.PublishPackageToPowerShellGallery@0
-    #condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/main'))
-    displayName: 'Azure DevOps PowerShell Gallery Packager '
-    inputs:
-      apiKey: '$(apikey)'
-      path: $(Build.ArtifactStagingDirectory)\Spiny
-      setVersionNumberInManifest: true
-      psd1FileName: $(Build.ArtifactStagingDirectory)\Spiny\Spiny.psd1
-      version: $(VersionNumber)
-
   - task: PowerShell@2
-    #condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/main'))
+    condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/main'))
     displayName: "Publish to PowerShellGallery"
     inputs:
       targetType: "inline"
