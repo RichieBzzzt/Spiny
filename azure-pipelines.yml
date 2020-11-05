@@ -25,6 +25,15 @@ pool:
 name: Spiny_$(BuildID)
 
 steps:
+
+  - task: PowerShell@2
+    displayName: "Update Build Number"
+    inputs:
+      targetType: 'inline'
+      script: |
+          $BuildName = $env:BUILD_DEFINITIONNAME +'_'+$env:VERSIONNUMBER +'_'+ $env:BUILD_SOURCEBRANCHNAME 
+          Write-Host "##vso[build.updatebuildnumber]$BuildName"
+
   - task: PowerShell@2
     displayName: "Powershell Pester Tests on Ubuntu Latest"
     inputs:
@@ -75,13 +84,22 @@ steps:
       artifact: Spiny
       path: $(Build.ArtifactStagingDirectory)\Spiny
 
-  - task: richiebzzzt.PublishPackageToPowerShellGallery.Publish-Package-To-PowerShell-Gallery.PublishPackageToPowerShellGallery@0
-    condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/main'))
-    displayName: 'Azure DevOps PowerShell Gallery Packager '
-    inputs:
-      apiKey: '$(apikey)'
-      path: $(Build.ArtifactStagingDirectory)\Spiny
-      setVersionNumberInManifest: true
-      psd1FileName: $(Build.ArtifactStagingDirectory)\Spiny\Spiny.psd1
-      version: $(VersionNumber)
+  # - task: richiebzzzt.PublishPackageToPowerShellGallery.Publish-Package-To-PowerShell-Gallery.PublishPackageToPowerShellGallery@0
+  #   condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/main'))
+  #   displayName: 'Azure DevOps PowerShell Gallery Packager '
+  #   inputs:
+  #     apiKey: '$(apikey)'
+  #     path: $(Build.ArtifactStagingDirectory)\Spiny
+  #     setVersionNumberInManifest: true
+  #     psd1FileName: $(Build.ArtifactStagingDirectory)\Spiny\Spiny.psd1
+  #     version: $(VersionNumber)
 
+  - task: PowerShell@2
+    displayName: "Publish to PowerShellGallery"
+    inputs:
+      targetType: "inline"
+      script: |
+        Install-Module Spiny -Scope CurrentUser -SkipPublisherCheck -Force
+        Import-Module Spiny 
+        $moduleNumber = Edit-SPModuleVersionNumber -ModuleVersionNumber $env:VERSIONNUMBER -psd1File $psdFile
+      pwsh: true
