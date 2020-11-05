@@ -84,6 +84,12 @@ steps:
       artifact: Spiny
       path: $(Build.ArtifactStagingDirectory)\Spiny
 
+  - task: DownloadBuildArtifacts@0
+    inputs:
+      buildType: 'current'
+      downloadPath: $(Build.ArtifactStagingDirectory)\Spiny
+      artifactName: Spiny
+
   - task: PowerShell@2
     condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/main'))
     displayName: "Publish to PowerShellGallery"
@@ -96,5 +102,4 @@ steps:
         Publish-SPPackageToPowerShellGallery `
         -apiKey '$(apikey)' `
         -path $(Build.ArtifactStagingDirectory)\Spiny
-
       pwsh: true
