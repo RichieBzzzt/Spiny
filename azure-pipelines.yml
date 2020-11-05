@@ -79,11 +79,6 @@ steps:
     inputs:
       ArtifactName: Spiny
 
-  - task: DownloadPipelineArtifact@2
-    inputs:
-      artifact: Spiny
-      path: $(Build.ArtifactStagingDirectory)\Spiny
-
   - task: DownloadBuildArtifacts@0
     inputs:
       buildType: 'current'
