@@ -37,17 +37,23 @@ Describe "Update Module Version Number" {
         $updatedModuleVersion | Should -BeExactly "ModuleVersion = '0.0.7.1'"
     }
 
-    it "Should Throw With Non-Existent PSD1, Version Number Remains Unchanged" {
+    it "Should Throw With Non-Existent PSD1" {
         $psdFile = "./file/NoFileSeaSalt.psd1"
         { Edit-SPModuleVersionNumber -ModuleVersionNumber "0.0.6" -psd1File $psdFile  } | Should -Throw
     }
 
-    it "Should Throw With Mis-spelt ModuelNumber, Version Number Remains Unchanged" {
+    it "Should Throw With Mis-spelt ModuelNumber" {
         $psdFile = Resolve-Path "./file/ModuelVersion.psd1"
         { Edit-SPModuleVersionNumber -ModuleVersionNumber "0.0.6" -psd1File $psdFile  } | Should -Throw
     }
 
-    it "Should Throw With Mis-spelt ModuelNumber, Version Number Remains Unchanged" {
+    it "Should Throw With Mis-spelt ModuelNumber" {
+        $psdFile = Resolve-Path "./file/NoModule.psd1"
+        { Edit-SPModuleVersionNumber -ModuleVersionNumber "0.0.6" -psd1File $psdFile  } | Should -Throw
+    }
+
+
+    it "Should Throw With Not PSD1" {
         $psdFile = Resolve-Path "./file/NoModule.psd1"
         { Edit-SPModuleVersionNumber -ModuleVersionNumber "0.0.6" -psd1File $psdFile  } | Should -Throw
     }
