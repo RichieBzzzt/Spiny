@@ -10,8 +10,6 @@ Function Publish-SPPackageToPowerShellGallery {
         [switch] $whatif
     )
     $path = [IO.Path]::GetFullPath($path)
-    [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
-
     if ($PSBoundParameters.ContainsKey('PublishModuleParams') -eq $false) {
         $PublishModuleParams = @{
             Path = $path 
@@ -28,7 +26,8 @@ Function Publish-SPPackageToPowerShellGallery {
         Install-SPNuget
     }
     Write-Host "Create NuGet package provider"
-    Install-PackageProvider -Name NuGet -Scope CurrentUser -Force -ForceBootstrap
+    [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+    Install-PackageProvider -Name NuGet
 
     if ($PSBoundParameters.ContainsKey('whatif') -eq $false) {
         Write-Host "Publishing module"
