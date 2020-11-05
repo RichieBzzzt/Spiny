@@ -38,7 +38,7 @@ Describe "Update Module Version Number" {
     }
 
     it "Should Throw With Non-Existent PSD1, Version Number Remains Unchanged" {
-        $psdFile = Resolve-Path "./file/NoFileSeaSalt.psd1"
+        $psdFile = "./file/NoFileSeaSalt.psd1"
         { Edit-SPModuleVersionNumber -ModuleVersionNumber "0.0.6" -psd1File $psdFile  } | Should -Throw
     }
 
