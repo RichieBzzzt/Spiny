@@ -67,7 +67,7 @@ steps:
     displayName: "Copy Files to: $(build.artifactstagingdirectory)"
     inputs:
       Contents: |
-        **/*.ps1
+        Public/*.ps1
         *.psd1
         *.psm1
       TargetFolder: "$(build.artifactstagingdirectory)"
@@ -89,9 +89,9 @@ steps:
     inputs:
       targetType: "inline"
       script: |
-        Install-Module Spiny -Scope CurrentUser -SkipPublisherCheck -Force -Verbose
-        Import-Module Spiny -Force -Verbose
-        $(build.artifactstagingdirectory)//Spiny/Spiny/Spiny.psm1 -Force
+        #Install-Module Spiny -Scope CurrentUser -SkipPublisherCheck -Force -Verbose
+        #Import-Module Spiny -Force -Verbose
+        Import-Module $(build.artifactstagingdirectory)//Spiny/Spiny/Spiny.psm1 -Force
         $moduleNumber = Edit-SPModuleVersionNumber -ModuleVersionNumber $env:VERSIONNUMBER -psd1File $(Build.ArtifactStagingDirectory)/Spiny/Spiny/Spiny.psd1
         Publish-SPPackageToPowerShellGallery `
         -apiKey '$(apikey)' `
