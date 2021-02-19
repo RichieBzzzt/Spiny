@@ -67,8 +67,7 @@ steps:
     displayName: "Copy Files to: $(build.artifactstagingdirectory)"
     inputs:
       Contents: |
-        Private\**.ps1
-        Public\**.ps1
+        Public\*.ps1
         *.psd1
         *.psm1
       TargetFolder: "$(build.artifactstagingdirectory)"
